@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>*,*::before,*::after{box-sizing:border-box}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>常盤木様のLEVEL UP PASS</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap">
+<style>
+/* Layout: retro RPG — member window, birthday message window, item grid, item detail window with つかう/すてる menu. Single deliberate dark look. */
+:root{
+  color-scheme: dark;
+  --night:#141833;
+  --win:#1d2350;
+  --win2:#252b62;
+  --line:#f3eedc;
+  --dim:#8d93c4;
+  --gold:#f2c14e;
+  --red:#e2574c;
+  --sky:#6cb6e0;
+  --pink:#ef8fb4;
+  --jp:"DotGothic16","MS Gothic","Osaka-Mono",monospace;
+  --en:"Press Start 2P","Courier New",monospace;
+}
+html,body{background:var(--night)}
+body{
+  color:var(--line);font-family:var(--jp);font-size:15px;line-height:1.7;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:36px 64px;
+  background-image:radial-gradient(var(--win) 1px,transparent 1px);background-size:8px 8px;
+}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
+
+.win{background:var(--win);position:relative;
+  box-shadow:0 -4px 0 0 var(--line),0 4px 0 0 var(--line),-4px 0 0 0 var(--line),4px 0 0 0 var(--line),
+    0 -8px 0 0 var(--night),0 8px 0 0 var(--night),-8px 0 0 0 var(--night),8px 0 0 0 var(--night),
+    12px 12px 0 0 rgba(0,0,0,.35)}
+.en{font-family:var(--en);letter-spacing:.04em}
+.blink{animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* member */
+.hero{display:flex;flex-direction:column;align-items:center;gap:36px}
+.member{width:min(460px,100%);padding:18px 20px;display:flex;flex-direction:column;gap:16px}
+.member .row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.brand{font-family:var(--en);color:var(--gold);font-size:clamp(18px,5.4vw,26px);line-height:1.2;text-shadow:3px 3px 0 #000}
+.ed{font-family:var(--en);font-size:8px;color:var(--dim);margin-top:8px}
+.heart-ico{width:40px;height:40px;image-rendering:pixelated;flex:none}
+.no{font-family:var(--en);font-size:clamp(11px,3.4vw,14px);color:var(--line);border-block:4px dotted var(--dim);padding:10px 0;text-align:center}
+.lbl{font-family:var(--en);font-size:8px;color:var(--sky);display:block;margin-bottom:4px}
+.member .val{font-size:18px}
+.member .since{font-family:var(--en);font-size:11px}
+
+.letter{width:min(560px,100%);padding:18px 20px 22px}
+.letter h1{margin:0 0 10px;font-family:var(--en);font-weight:400;font-size:clamp(14px,4vw,18px);color:var(--pink);text-shadow:3px 3px 0 #000;line-height:1.6;text-wrap:balance}
+.letter p{margin:0;font-size:16px;line-height:1.9}
+.letter .next{position:absolute;right:16px;bottom:8px}
+
+/* grid */
+.deck-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px 16px}
+.deck-head h2{margin:0;font-weight:400;font-size:20px;color:var(--gold);text-shadow:2px 2px 0 #000}
+.deck-head h2 small{display:block;font-family:var(--en);font-size:9px;color:var(--dim);text-shadow:none;margin-bottom:6px}
+.progress{font-size:15px;color:var(--dim)}
+.progress b{color:var(--line);font-weight:400}
+.hint{margin:-26px 0 0;color:var(--dim);font-size:14px}
+.deck{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:24px 22px;padding:8px}
+.item{all:unset;cursor:pointer;display:flex;flex-direction:column;min-width:0}
+.item:focus-visible{outline:3px solid var(--gold);outline-offset:10px}
+.item .win{display:flex;flex-direction:column;height:100%;transition:transform .1s steps(2)}
+.item:hover .win{transform:translate(-2px,-2px)}
+.ihead{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:8px 10px;border-bottom:4px solid var(--line);font-family:var(--en);font-size:8px}
+.tag{padding:3px 4px;color:var(--night);background:var(--c,var(--sky))}
+.R{--c:var(--sky)} .SR{--c:var(--gold)} .SSR{--c:var(--gold)} .SECRET{--c:var(--pink)} .REVERSE{--c:var(--red)}
+.SSR .tag{background:linear-gradient(90deg,var(--gold),var(--pink),var(--sky));}
+.iart{height:104px;display:grid;place-items:center;border-bottom:4px solid var(--line);position:relative;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 4px,transparent 4px 8px),linear-gradient(var(--night),var(--win2))}
+.iart canvas{width:64px;height:64px;image-rendering:pixelated}
+.item:hover .iart canvas{animation:bob .8s steps(2) infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+.ibody{padding:10px 10px 12px;display:flex;flex-direction:column;gap:6px;flex:1}
+.iname{font-size:15px;line-height:1.45;text-wrap:balance;min-height:2.9em}
+.iprice{margin-top:auto;font-size:13px;color:var(--dim);display:flex;gap:6px}
+.iprice span:last-child{color:var(--gold);min-width:0;overflow-wrap:anywhere}
+.qmark{font-family:var(--en);font-size:36px;color:var(--pink);text-shadow:4px 4px 0 #000}
+.used-tag{position:absolute;right:6px;bottom:6px;font-family:var(--en);font-size:9px;color:var(--red);background:var(--night);padding:4px 5px;box-shadow:0 0 0 3px var(--red)}
+.item.used .iname,.item.used canvas{opacity:.45}
+.deck.reviving .item{opacity:.3;pointer-events:none}
+.deck.reviving .item.used:not([data-id="again"]){opacity:1;pointer-events:auto}
+.deck.reviving .item.used:not([data-id="again"]) .win{animation:blink .6s steps(2) infinite}
+.revive-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;font-size:15px;color:var(--gold)}
+.plain{all:unset;cursor:pointer;color:var(--line);padding:2px 6px 2px 22px;position:relative}
+.plain::before{content:"▶";position:absolute;left:2px}
+.plain:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+/* detail */
+.overlay{position:fixed;inset:0;z-index:20;background:rgba(10,12,30,.86);display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;
+  padding:calc(28px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.detail{width:min(360px,100%);margin:auto 0}
+.dhead{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:4px solid var(--line);font-family:var(--en);font-size:10px}
+.dart{height:170px;display:grid;place-items:center;border-bottom:4px solid var(--line);position:relative;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 4px,transparent 4px 8px),linear-gradient(var(--night),var(--win2))}
+.dart canvas{width:108px;height:108px;image-rendering:pixelated;animation:bob 1s steps(2) infinite}
+.get{position:absolute;top:10px;left:10px;font-family:var(--en);font-size:9px;color:var(--gold)}
+.spark{position:absolute;width:8px;height:8px;background:var(--line);animation:blink 1.2s steps(2) infinite}
+.spark::before,.spark::after{content:"";position:absolute;background:var(--line)}
+.spark::before{left:-8px;right:-8px;top:2px;bottom:2px}
+.spark::after{top:-8px;bottom:-8px;left:2px;right:2px}
+.dbody{padding:14px 14px 12px;display:flex;flex-direction:column;gap:12px}
+.dname{font-size:22px;line-height:1.3;color:var(--gold);text-shadow:3px 3px 0 #000;text-wrap:balance}
+.ddesc{margin:0;font-size:15px;line-height:1.8;white-space:pre-line}
+.dnotes{list-style:none;margin:4px 0 0;padding:0;font-size:12px;color:var(--dim);display:flex;flex-direction:column;gap:2px}
+.dnotes li::before{content:"※"}
+.stats{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px;border-top:4px dotted var(--dim);padding-top:10px;margin:0}
+.stats dt{color:var(--sky)}
+.stats dd{margin:0;min-width:0}
+.hearts{color:var(--red);letter-spacing:2px}
+.menu{display:flex;gap:6px 18px;flex-wrap:wrap;padding:10px 14px;border-top:4px solid var(--line);font-size:18px}
+.menu button{all:unset;cursor:pointer;padding-left:22px;position:relative}
+.menu button.sel::before{content:"▶";position:absolute;left:0;animation:blink .8s steps(2) infinite}
+.menu button:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
+.msg{margin:0 14px 14px;min-height:72px;background:#000;padding:10px 12px;font-size:15px;line-height:1.75;white-space:pre-line;box-shadow:0 0 0 3px var(--line)}
+.dfoot{display:flex;justify-content:space-between;align-items:flex-end;padding:10px 14px 12px;border-top:4px solid var(--line)}
+.dfoot b{font-weight:400;font-size:16px}
+.stamp{position:absolute;right:12px;bottom:12px;font-family:var(--en);font-size:12px;line-height:1.6;color:var(--red);background:var(--night);padding:6px 8px;box-shadow:0 0 0 4px var(--red);text-align:center}
+.stamp small{display:block;font-size:7px}
+.stamp.pop{animation:pop .5s steps(3) both}
+@keyframes pop{0%{transform:scale(2.2);opacity:0}100%{transform:scale(1);opacity:1}}
+
+/* footer */
+.foot{display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--dim);font-size:13px;text-align:center;border-top:4px dotted var(--win2);padding-top:22px}
+.confirm{display:flex;gap:10px 18px;align-items:center;flex-wrap:wrap;justify-content:center}
+
+@media (prefers-reduced-motion: reduce){
+  .blink,.spark,.dart canvas,.item:hover .iart canvas,.menu button.sel::before,.stamp.pop,.deck.reviving .item.used .win{animation:none}
+}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="win member">
+      <div class="row">
+        <div>
+          <div class="brand">LEVEL UP PASS</div>
+          <div class="ed">SPECIAL EDITION</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:none">
+          <canvas class="heart-ico" id="memberIco" width="12" height="12" aria-hidden="true" style="animation:bob 1s steps(2) infinite"></canvas>
+          <span class="en blink" style="font-size:7px;color:#6fbf73">LV UP!</span>
+        </div>
+      </div>
+      <div class="no">No.20250802</div>
+      <div class="row">
+        <div>
+          <span class="lbl">MEMBER</span>
+          <div class="val">ときわぎ さま</div>
+          <span class="lbl" style="margin-top:12px">MEMBER SINCE</span>
+          <div class="since">2025.08.02</div>
+        </div>
+        <div style="text-align:right">
+          <span class="lbl">ISSUED BY</span>
+          <div class="val">くれあ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="win letter">
+      <h1>HAPPY BIRTHDAY!</h1>
+      <p>おたんじょうび おめでとう！<br>にゅうかい 1ねん いじょうの ゆうりょう かいいんさまに、とくべつな カードを おとどけします。すきなときに つかってね。</p>
+      <span class="next blink" aria-hidden="true">▼</span>
+    </div>
+  </header>
+
+  <section style="display:flex;flex-direction:column;gap:30px">
+    <div class="deck-head">
+      <h2><small>ITEM LIST</small>もちもの</h2>
+      <div class="progress" id="progress"></div>
+    </div>
+    <p class="hint">カードを タップすると、くわしい こうかと「つかう」が でてきます。</p>
+    <div class="win revive-bar" id="reviveBar" hidden>
+      <span>ふっかつさせる カードを えらんでね</span>
+      <button class="plain" id="reviveCancel" type="button">やめる</button>
+    </div>
+    <div class="deck" id="deck"></div>
+  </section>
+
+  <footer class="foot">
+    <div>LEVEL UP PASS No.20250802 ／ つかった きろくは この スマホの ブラウザに のこります</div>
+    <div class="confirm" id="resetArea"></div>
+  </footer>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="win detail" role="dialog" aria-modal="true" aria-labelledby="dName" id="detail"></div>
+</div>
+
+<script>
+const PAL={K:"#141833",Y:"#f2c14e",O:"#d9822b",W:"#f3eedc",R:"#e2574c",P:"#ef8fb4",B:"#6cb6e0",G:"#6fbf73",D:"#8d93c4",N:"#9a6a3a"};
+const SPR={
+ arrow:[".....KK.....","....KGGK....","...KGGGGK...","..KGGWGGGK..",".KGGWGGGGGK.","KKKKGGGGKKKK","...KGGGGK...","...KGGGGK...","...KGGGGK...","...KGGGGK...","...KKKKKK...","............"],
+ crown:["............","............",".K...KK...K.","KYK.KYYK.KYK","KYYKYYYYKYYK","KYYYYRYYYYYK","KYYYRRRYYYYK","KYYYYRYYYYYK","KOOOOOOOOOOK","KYYYYYYYYYYK","KKKKKKKKKKKK","............"],
+ moon:["....KKKK....","..KKYYYYK...",".KYYYYKK..W.",".KYYYK......","KYYYK...W...","KYYYK.......","KYYYK.......","KYYYK.....W.",".KYYYK......",".KYYYYKK....","..KKYYYYKK..","....KKKK...."],
+ hammer:["..KKKKKK....",".KWWWWWWK...",".KDDDDDDKK..","..KKKKKKWK..",".....KNK.K..",".....KNK....",".....KNK....",".....KNK....",".....KNK....",".....KNK....",".....KNK....",".....KKK...."],
+ flag:[".KK.........",".KNKKKKKK...",".KNKRRRRRK..",".KNKRRWRRRK.",".KNKRRRRRK..",".KNKKKKKK...",".KNK........",".KNK........",".KNK........",".KNK........","GGGGGGGGGGG.","............"],
+ bell:[".....KK.....","....KYYK....","...KYYYYK...","..KYWYYYYK..","..KYWYYYYK..","..KYYYYYYK..","..KYYYYYYK..",".KYYYYYYYYK.","KKKKKKKKKKKK",".....KOK....","......K.....","............"],
+ onigiri:[".....KK.....","....KWWK....","...KWWWWK...","..KWWWWWWK..","..KWWWWWWK..",".KWWWWWWWWK.",".KWWKKKKWWK.","KWWWKKKKWWWK","KWWWKKKKWWWK","KKKKKKKKKKKK","............","............"],
+ bubble:["............",".KKKKKKKKKK.","KWWWWWWWWWWK","KWKKWKKKWWWK","KWWWWWWWWWWK","KWKKKWKKWWWK","KWWWWWWWWWWK",".KKKWWKKKKK.","...KWK......","...KK.......","............","............"],
+ heart:["............",".KKK...KKK..","KRRRK.KRRRK.","KRWRRKRRRRK.","KRRRRRRRRRK.","KRRRRRRRRRK.",".KRRRRRRRK..","..KRRRRRK...","...KRRRK....","....KRK.....",".....K......","............"],
+ potion:["....KKKK....","....KDDK....",".....KK.....","....KWWK....","...KBBBBK...","..KBWBBBBK..","..KBBBBBBK..","..KBBBBBBK..","..KBBBBBBK..","...KBBBBK...","....KKKK....","............"],
+ star:[".....KK.....","....KYYK....","....KYYK....","KKKKKYWYKKKK","KYYYYYWYYYYK",".KYYYYYYYYK.","..KYYYYYYK..","..KYYYYYYK..",".KYYYKKYYYK.",".KYYK..KYYK.","KYKK....KKYK","KK........KK"],
+ cloche:[".....KK.....","....KWWK....","..KKKKKKKK..",".KWWWWWWDWK.","KWWWWWWWWDWK","KWWWWWWWWDWK","KWWWWWWWWWWK","KKKKKKKKKKKK","KDDDDDDDDDDK",".KKKKKKKKKK.","............","............"],
+ gift:["...KK..KK...","..KRRKKRRK..","...KKRRKK...","KKKKKRRKKKKK","KPPPPRRPPPPK","KKKKKRRKKKKK",".KPPPRRPPPK.",".KPPPRRPPPK.",".KPPPRRPPPK.",".KPPPRRPPPK.",".KKKKKKKKKK.","............"]
+};
+function draw(cv,name){const c=cv.getContext('2d');c.clearRect(0,0,12,12);SPR[name].forEach((row,y)=>[...row].forEach((ch,x)=>{if(PAL[ch]){c.fillStyle=PAL[ch];c.fillRect(x,y,1,1);}}));}
+draw(document.getElementById('memberIco'),'arrow');
+
+const HEARTS={R:'♥♥♡♡♡',SR:'♥♥♥♡♡',SSR:'♥♥♥♥♥',SECRET:'？？？？？',REVERSE:'♥♥♥♥♥'};
+const CARDS=[
+ {id:'prince',r:'SSR',s:'crown',t:'王子様デー券',p:'3000G',e:'あまやかし 1にち',d:'ほんじつ ときわぎさまは おうじさま です。\nさいだいげん あまやかされる けんりを あたえます。',n:['あまやかしの ないようは ときわぎさまが していできます'],m:'ときわぎは 王子様デー券を つかった！\nくれあの あまやかしが はじまった！'},
+ {id:'hiza',r:'R',s:'moon',t:'ひざまくら・ご褒美券',p:'300G（30ぷん あたり）',e:'ひざまくら 30ぷん',d:'いつでも 30ぷんの ひざまくらを ていきょう します。',n:['えんちょうは そうだん'],m:'ときわぎは ひざまくら券を つかった！\nときわぎの HPが みるみる かいふくしていく……'},
+ {id:'help',r:'R',s:'hammer',t:'お手伝い代行券',p:'800G',e:'めんどうなこと ×1',d:'めんどうな ことを ひとつ かわりに やります。',n:['にがてな ことを ゆうせん します'],m:'ときわぎは お手伝い代行券を つかった！\nくれあが めんどうなことを ひきうけた！'},
+ {id:'date',r:'R',s:'flag',t:'デート決定権',p:'1200G（きめてくれたら 0G）',e:'けっていけん ×1',d:'つぎの デートの いきさき・じかん・ごはん、ぜんぶ ときわぎさまが きめられます。\nというか きめてください。',n:[],m:'ときわぎは デート決定権を つかった！\n……というか きめてください。'},
+ {id:'summon',r:'SR',s:'bell',t:'緊急召喚券',p:'5000G（こうつうひ べつ）',e:'しょうかん ×1',d:'「あいたい」の ひとことで、つごうの あう さいたんびに かけつけます。',n:['「あいたい」と おくってから つかってね'],m:'ときわぎは くれあを しょうかんした！\nくれあが かけつける じゅんびを はじめた！'},
+ {id:'food',r:'R',s:'onigiri',t:'好きなもの食べに行こう券',p:'2000G',e:'ごはん 1かい',d:'ときわぎさまが たべたい ものを、いっしょに たべに いきます。',n:['おみせえらびも おまかせします'],m:'ときわぎは 好きなもの食べに行こう券を つかった！\nくれあは おなかを すかせて まっている！'},
+ {id:'talk',r:'R',s:'bubble',t:'何でも相談聞くよ券',p:'0G（いつでも むりょう）',e:'そうだん むせいげん',d:'どんな はなしでも ききます。\nてか そうだん しろよ。',n:['ひとりで かかえこむのは きんし'],m:'ときわぎは 相談券を つかった！\nくれあは はなしを きく たいせいに はいった！'},
+ {id:'wagamama',r:'R',s:'heart',t:'わがまま許可証',p:'9999G',e:'「いいよ」 1にち',d:'きょうは どんな わがままにも「いいよ」と こたえます。',n:[],m:'ときわぎは わがまま許可証を つかった！\nくれあは「いいよ」しか いえなくなった！'},
+ {id:'again',r:'SR',s:'potion',t:'もう一回券',p:'????G',e:'カード ふっかつ ×1',d:'つかった カードを 1まい ふっかつ させられます。',n:['このカードは ふっかつ できません'],m:''},
+ {id:'lucky',r:'SSR',s:'star',t:'ラッキーカード',p:'うれません',e:'ねがいごと ×1',d:'このカードを ていじした ものの ねがいを ひとつ かなえる。',n:['じつげん かのうな はんいに かぎります','きげん：ずっと'],m:'ときわぎは ラッキーカードを つかった！\nねがいごとを ひとつ となえよう！'},
+ {id:'secret',r:'SECRET',s:'cloche',t:'シェフくれあのフルコース券',p:'はかりしれない',e:'フルコース ×1',d:'ときわぎさまの リクエストで、ぜんさいから デザートまでの フルコースを ごよういします。',n:['メニューは じぜんに うけつけます','あじの ほしょうは いたしかねます'],m:'シェフくれあが キッチンに たった！\n……あじの ほしょうは いたしかねます。'},
+ {id:'comp',r:'REVERSE',s:'gift',t:'compensation券',p:'ときわぎ もち',e:'うめあわせ ×1',d:'これまでの ほてんとして、ときわぎさまは くれあに つぎの どれかを ていきょう します。\n・すきな ばしょに つれていく\n・すきな ものを ごちそうする\n・プレゼントを かう',n:['ほんにんの「このうめあわせは かならず するから」はつげんに もとづき はっこう','このカードだけ くれあが つかいます'],m:'くれあは compensation券を つきつけた！\nときわぎは うめあわせを しなければ ならない！',drop:'ときわぎは にげようとした！\nしかし くれあからは にげられない！'}
+];
+const TOTAL=CARDS.length, KEY='lovepass-pixel-2025-0802';
+let state={revealed:false,used:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.used)state=s;}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}};
+const pad=n=>String(n).padStart(2,'0');
+const today=()=>{const d=new Date();return d.getFullYear()+'.'+pad(d.getMonth()+1)+'.'+pad(d.getDate());};
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const hidden=c=>c.id==='secret'&&!state.revealed;
+
+const deck=document.getElementById('deck'), items={};
+function renderItem(c,i){
+  const el=items[c.id];
+  const h=hidden(c);
+  el.className='item '+c.r+(state.used[c.id]?' used':'');
+  el.setAttribute('aria-label',h?'ふういんされた シークレットカード':`${c.t}${state.used[c.id]?' つかいずみ':''}`);
+  el.innerHTML=`<div class="win">
+    <div class="ihead"><span>No.${pad(i+1)}</span><span class="tag">${c.r}</span></div>
+    <div class="iart">${h?'<span class="qmark blink">?</span>':'<canvas width="12" height="12"></canvas>'}${state.used[c.id]?'<span class="used-tag">USED</span>':''}</div>
+    <div class="ibody">
+      <div class="iname">${h?'？？？？？':esc(c.t)}</div>
+      <div class="iprice"><span>ねだん</span><span>${h?'？？？':esc(c.p)}</span></div>
+    </div></div>`;
+  if(!h) draw(el.querySelector('canvas'),c.s);
+}
+CARDS.forEach((c,i)=>{
+  const b=document.createElement('button');b.type='button';b.dataset.id=c.id;
+  items[c.id]=b;b.addEventListener('click',()=>onItem(c,i));
+  deck.appendChild(b);renderItem(c,i);
+});
+function progress(){
+  const u=Object.values(state.used).filter(Boolean).length;
+  document.getElementById('progress').innerHTML=`つかった カード <b>${u}</b> / ${TOTAL}`;
+}
+progress();
+
+let reviving=false;
+const reviveBar=document.getElementById('reviveBar');
+function startRevive(){reviving=true;deck.classList.add('reviving');reviveBar.hidden=false;reviveBar.scrollIntoView({block:'center',behavior:'smooth'});}
+function endRevive(){reviving=false;deck.classList.remove('reviving');reviveBar.hidden=true;}
+document.getElementById('reviveCancel').addEventListener('click',endRevive);
+
+function onItem(c,i){
+  if(reviving){
+    if(state.used[c.id]&&c.id!=='again'){
+      delete state.used[c.id];state.used.again=today();save();endRevive();
+      renderItem(c,i);const a=CARDS.findIndex(x=>x.id==='again');renderItem(CARDS[a],a);progress();
+      openDetail(c,i,`ときわぎは もう一回券を つかった！\n${c.t}が ふっかつした！`);
+    }
+    return;
+  }
+  if(hidden(c)){
+    state.revealed=true;save();renderItem(c,i);
+    openDetail(c,i,'シークレットカードの ふういんが とけた！\nなかから '+c.t+'が でてきた！');
+    return;
+  }
+  openDetail(c,i);
+}
+
+/* detail window */
+const overlay=document.getElementById('overlay'), detail=document.getElementById('detail');
+let cur=null,lastFocus=null,typer=null;
+function say(s){
+  const box=detail.querySelector('.msg');if(!box)return;
+  clearInterval(typer);
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){box.textContent=s;return;}
+  let k=0;box.textContent='';
+  typer=setInterval(()=>{box.textContent=s.slice(0,++k);if(k>=s.length)clearInterval(typer);},45);
+}
+function stampHTML(d,pop){return `<div class="stamp${pop?' pop':''}">USED<small>${esc(d)}</small></div>`;}
+function openDetail(c,i,intro){
+  cur={c,i};lastFocus=document.activeElement;
+  detail.innerHTML=`
+    <div class="dhead"><span>ITEM No.${pad(i+1)}</span><span class="tag ${c.r}" style="background:var(--c)">${c.r}</span></div>
+    <div class="dart">
+      <span class="get">ITEM GET!</span>
+      <span class="spark" style="top:34px;right:54px"></span>
+      <span class="spark" style="bottom:38px;left:50px;animation-delay:.6s"></span>
+      <canvas width="12" height="12" aria-hidden="true"></canvas>
+      ${state.used[c.id]?stampHTML(state.used[c.id]):''}
+    </div>
+    <div class="dbody">
+      <div class="dname" id="dName">${esc(c.t)}</div>
+      <div>
+        <p class="ddesc">${esc(c.d)}</p>
+        ${c.n.length?`<ul class="dnotes">${c.n.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
+      </div>
+      <dl class="stats">
+        <dt>レアど</dt><dd class="hearts">${HEARTS[c.r]}</dd>
+        <dt>こうか</dt><dd>${esc(c.e)}</dd>
+        <dt>ねだん</dt><dd>${esc(c.p)}</dd>
+      </dl>
+    </div>
+    <div class="menu">
+      <button type="button" class="sel" data-act="use">つかう</button>
+      <button type="button" data-act="drop">すてる</button>
+      <button type="button" data-act="close">とじる</button>
+    </div>
+    <div class="msg" role="status" aria-live="polite"></div>
+    <div class="dfoot">
+      <div><span class="lbl">OWNER</span><b>ときわぎ さま</b></div>
+      <div style="text-align:right"><span class="lbl">ISSUED BY</span><b>くれあ</b></div>
+    </div>`;
+  draw(detail.querySelector('.dart canvas'),c.s);
+  detail.querySelectorAll('.menu button').forEach(b=>b.addEventListener('click',()=>act(b)));
+  overlay.hidden=false;overlay.scrollTop=0;
+  detail.querySelector('[data-act="use"]').focus();
+  say(intro || (state.used[c.id]?`${c.t}は ${state.used[c.id]}に つかいました。`:`${c.t}を てにいれた！`));
+}
+function closeDetail(){overlay.hidden=true;clearInterval(typer);cur=null;if(lastFocus&&document.contains(lastFocus))lastFocus.focus();}
+function act(b){
+  detail.querySelectorAll('.menu button').forEach(x=>x.classList.toggle('sel',x===b));
+  const {c,i}=cur, a=b.dataset.act;
+  if(a==='close'){closeDetail();return;}
+  if(a==='drop'){say(c.drop||'このカードは だいじな ものなので\nすてられません！');return;}
+  if(state.used[c.id]){say('この カードは もう つかいました。');return;}
+  if(c.id==='again'){
+    if(!CARDS.some(x=>x.id!=='again'&&state.used[x.id])){say('まだ つかった カードが ありません。');return;}
+    closeDetail();startRevive();return;
+  }
+  state.used[c.id]=today();save();renderItem(c,i);progress();
+  say(c.m);
+  const art=detail.querySelector('.dart');
+  setTimeout(()=>{if(cur&&cur.c===c&&!art.querySelector('.stamp'))art.insertAdjacentHTML('beforeend',stampHTML(state.used[c.id],true));},c.m.length*45+200);
+}
+overlay.addEventListener('click',e=>{if(e.target===overlay)closeDetail();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!overlay.hidden)closeDetail();else if(reviving)endRevive();}});
+
+/* reset */
+const resetArea=document.getElementById('resetArea');
+function resetIdle(){
+  resetArea.innerHTML='<button class="plain" id="resetBtn" type="button">きろくを リセット</button>';
+  document.getElementById('resetBtn').addEventListener('click',resetAsk);
+}
+function resetAsk(){
+  resetArea.innerHTML='<span>つかった きろくと シークレットの ふういんを もとに もどします。</span><button class="plain" id="resetYes" type="button">リセットする</button><button class="plain" id="resetNo" type="button">やめる</button>';
+  document.getElementById('resetYes').addEventListener('click',()=>{
+    state={revealed:false,used:{}};save();endRevive();
+    CARDS.forEach((c,i)=>renderItem(c,i));progress();resetIdle();
+  });
+  document.getElementById('resetNo').addEventListener('click',resetIdle);
+}
+resetIdle();
+</script>
+</body>
+</html>
